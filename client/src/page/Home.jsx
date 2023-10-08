@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 
 import { Card, FormField, Loader } from '../components';
 
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 const RenderCards = ({ data, title }) => {
   if (data?.length > 0) {
     return (
@@ -38,7 +41,9 @@ const Home = () => {
         setAllPosts(result.data.reverse());
       }
     } catch (err) {
-      alert(err);
+      toast.error(err, {
+        position: toast.POSITION.TOP_RIGHT
+      });
     } finally {
       setLoading(false);
     }
@@ -71,7 +76,7 @@ const Home = () => {
           labelName="Search posts"
           type="text"
           name="text"
-          placeholder="Search something..."
+          placeholder="Search for posts"
           value={searchText}
           handleChange={handleSearchChange}
         />

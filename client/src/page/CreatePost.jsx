@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { preview } from '../assets';
 import { getRandomPrompt } from '../utils';
 import { FormField, Loader } from '../components';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -40,13 +42,20 @@ const CreatePost = () => {
 
         const data = await response.json();
         setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+        toast.success("Image generated!", {
+          position: toast.POSITION.TOP_RIGHT
+        });
       } catch (err) {
-        alert(err);
+        toast.error("Error generating image!", {
+          position: toast.POSITION.TOP_RIGHT
+        });
       } finally {
         setGeneratingImg(false);
       }
     } else {
-      alert('Please provide a valid prompt');
+      toast.info("Please enter a valid prompt!", {
+        position: toast.POSITION.TOP_RIGHT
+      });
     }
   };
 
@@ -65,15 +74,21 @@ const CreatePost = () => {
         });
 
         await response.json();
-        alert('Success');
         navigate('/');
+        toast.success("Posted successfully!", {
+          position: toast.POSITION.TOP_RIGHT
+        });
       } catch (err) {
-        alert(err);
+        toast.error("Error uploading", {
+          position: toast.POSITION.TOP_LEFT
+        });
       } finally {
         setLoading(false);
       }
     } else {
-      alert('Please generate an image with proper details');
+      toast.info("Please generate an image with proper details", {
+        position: toast.POSITION.TOP_RIGHT
+      });
     }
   };
 
@@ -81,7 +96,6 @@ const CreatePost = () => {
     <section className="max-w-7xl mx-auto">
       <div>
         <h1 className="font-extrabold text-[#222328] text-[32px]">Create</h1>
-        <p className="mt-2 text-[#666e75] text-[14px] max-w-[500px]">Generate an imaginative image through DALL-E AI and share it with the community</p>
       </div>
 
       <form className="mt-16 max-w-3xl" onSubmit={handleSubmit}>
@@ -90,7 +104,7 @@ const CreatePost = () => {
             labelName="Your Name"
             type="text"
             name="name"
-            placeholder="Ex., john doe"
+            placeholder="Name"
             value={form.name}
             handleChange={handleChange}
           />
@@ -133,20 +147,21 @@ const CreatePost = () => {
           <button
             type="button"
             onClick={generateImage}
-            className=" text-white bg-green-700 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            className=" text-white bg-[#4d586e] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
           >
-            {generatingImg ? 'Generating...' : 'Generate'}
+            {generatingImg ? 'Generating...' : 'Generate Image'}
           </button>
         </div>
 
         <div className="mt-10">
-          <p className="mt-2 text-[#666e75] text-[14px]">** Once you have created the image you want, you can share it with others in the community **</p>
+          <p className="mt-2 text-[#666e75] text-[14px]">Share this image with others in the community</p>
           <button
             type="submit"
-            className="mt-3 text-white bg-[#6469ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            className="mt-3 text-white bg-[#029499] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
           >
-            {loading ? 'Sharing...' : 'Share with the Community'}
+            {loading ? 'Sharing...' : 'Share with Community'}
           </button>
+          <ToastContainer />
         </div>
       </form>
     </section>
